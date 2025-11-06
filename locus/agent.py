@@ -9,7 +9,7 @@ from locus.sub_agents.explorer.agent import explorer_agent
 from locus.sub_agents.memory.agent import memory_agent
 
 root_agent = Agent(
-    name="insight_agent",
+    name="locus",
     model="gemini-2.5-flash",  # Or any other suitable model
     instruction=ROUTER_PROMPT,
     sub_agents=[
