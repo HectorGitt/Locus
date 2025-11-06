@@ -184,8 +184,6 @@ Assistant: Let me suggest some local food options and cultural experiences.
 
 ## Development
 
-### Project Structure
-
 ```
 Locus/
 ├── locus/
@@ -193,6 +191,9 @@ Locus/
 │   ├── agent.py              # Root agent definition
 │   ├── main.py               # Terminal interface
 │   ├── prompt.py             # Router prompts
+│   ├── shared_libraries/     # Shared utility functions
+│   │   ├── __init__.py
+│   │   └── geocoding.py      # Shared geocoding utility
 │   └── sub_agents/
 │       ├── navigator/
 │       │   ├── agent.py

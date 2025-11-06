@@ -1,5 +1,6 @@
 import os
 import requests
+from locus.shared_libraries.geocoding import geocode_location
 
 
 def check_air_quality(location: str) -> dict:
@@ -18,19 +19,13 @@ def check_air_quality(location: str) -> dict:
         return {"error": "GOOGLE_MAPS_API_KEY not found in .env file."}
 
     try:
-        # First geocode the location using Google Maps Geocoding API
-        geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
-        geocode_params = {"address": location, "key": api_key}
+        # Geocode the location using shared utility
+        geocode_result = geocode_location(location)
+        if "error" in geocode_result:
+            return {"error": geocode_result["error"]}
 
-        geocode_response = requests.get(geocode_url, params=geocode_params)
-        geocode_response.raise_for_status()
-        geocode_data = geocode_response.json()
-
-        if not geocode_data.get("results"):
-            return {"error": f"Could not find location: {location}"}
-
-        lat = geocode_data["results"][0]["geometry"]["location"]["lat"]
-        lng = geocode_data["results"][0]["geometry"]["location"]["lng"]
+        lat = geocode_result["lat"]
+        lng = geocode_result["lng"]
 
         # Try Google Air Quality API first
         try:

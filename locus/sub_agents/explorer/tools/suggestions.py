@@ -1,6 +1,7 @@
 import os
 import googlemaps
 from typing import Optional
+from locus.shared_libraries.geocoding import geocode_location
 
 
 def suggest_experiences(
@@ -24,13 +25,13 @@ def suggest_experiences(
     gmaps = googlemaps.Client(key=api_key)
 
     try:
-        # Geocode the location
-        geocode_result = gmaps.geocode(location)
-        if not geocode_result:
-            return {"error": f"Could not find location: {location}"}
+        # Geocode the location using shared utility
+        geocode_result = geocode_location(location)
+        if "error" in geocode_result:
+            return {"error": geocode_result["error"]}
 
-        lat = geocode_result[0]["geometry"]["location"]["lat"]
-        lng = geocode_result[0]["geometry"]["location"]["lng"]
+        lat = geocode_result["lat"]
+        lng = geocode_result["lng"]
 
         # Determine place types based on mood and weather
         place_types = []

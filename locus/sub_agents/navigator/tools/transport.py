@@ -1,6 +1,7 @@
 import os
 import googlemaps
 from datetime import datetime
+from locus.shared_libraries.geocoding import geocode_location
 
 
 def get_local_transport(destination: str, origin: str = "") -> dict:
@@ -24,12 +25,13 @@ def get_local_transport(destination: str, origin: str = "") -> dict:
     if not origin:
         # If no origin is specified, find public transit stations near the destination
         try:
-            geocode_result = gmaps.geocode(destination)
-            if not geocode_result:
-                return {"error": f"Could not find location: {destination}"}
+            # Geocode the destination using shared utility
+            geocode_result = geocode_location(destination)
+            if "error" in geocode_result:
+                return {"error": geocode_result["error"]}
 
-            lat = geocode_result[0]["geometry"]["location"]["lat"]
-            lng = geocode_result[0]["geometry"]["location"]["lng"]
+            lat = geocode_result["lat"]
+            lng = geocode_result["lng"]
 
             places_result = gmaps.places_nearby(
                 location=(lat, lng), radius=1000, type="transit_station"
