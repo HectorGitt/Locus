@@ -7,6 +7,8 @@ Locus is a multi-agent AI travel assistant built with Google Agent Development K
 -   **Multi-Agent Architecture**: Modular design with specialized sub-agents
 -   **Flight Planning**: Find flights between destinations using Google Custom Search
 -   **Local Transport**: Get public transit and transportation options using Google Maps
+-   **Weather & Climate**: Real-time weather forecasts and air quality monitoring
+-   **Environmental Safety**: Air quality assessment, environmental hazards, and travel warnings
 -   **Budget Management**: Currency conversion and budget planning
 -   **Cultural & Food Recommendations**: Local cuisine and cultural insights
 -   **Language Support**: Real-time translation services
@@ -23,6 +25,8 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 ### Sub-Agents
 
 -   **Navigator**: Handles flight booking and local transportation
+-   **Weather**: Provides real-time weather forecasts and air quality monitoring
+-   **Env Hazards**: Assesses environmental safety, air quality, and travel warnings
 -   **Budget**: Manages currency conversion and travel budgets
 -   **Culture & Food**: Provides local food and cultural recommendations
 -   **Language**: Offers translation services
@@ -73,11 +77,14 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 2. Obtain the following API keys from Google Cloud Console:
 
     - **Google AI Studio API Key**: For Gemini model access
-    - **Google Maps API Key**: For transportation and places data
-    - **Google Custom Search API Key**: For flight search functionality
+    - **Google Maps API Key**: For transportation, geocoding, and places data
+    - **Google Custom Search API Key**: For flight search and general information
     - **Google Custom Search Engine ID**: Create a CSE at https://cse.google.com/
     - **Google Cloud Translation API Key**: For language translation
-    - **Additional keys**: For vision, air quality, weather, timezone APIs
+    - **Google Air Quality API Key**: For real-time air quality monitoring
+    - **Google Weather API Key**: For weather forecasts and conditions
+    - **Google Timezone API Key**: For timezone information
+    - **Google Cloud Vision API Key**: For image analysis (optional)
 
 3. Update `.env` with your actual API keys:
     ```env
@@ -86,7 +93,10 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
     GOOGLE_CUSTOM_SEARCH_API_KEY=your_custom_search_api_key_here
     GOOGLE_CUSTOM_SEARCH_CSE_ID=your_custom_search_engine_id_here
     GOOGLE_CLOUD_TRANSLATION_API_KEY=your_translation_api_key_here
-    # ... other keys as needed
+    GOOGLE_AIR_QUALITY_API_KEY=your_air_quality_api_key_here
+    GOOGLE_WEATHER_API_KEY=your_weather_api_key_here
+    GOOGLE_TIMEZONE_API_KEY=your_timezone_api_key_here
+    GOOGLE_CLOUD_VISION_API_KEY=your_vision_api_key_here
     ```
 
 ### Google Custom Search Engine Setup
@@ -121,6 +131,26 @@ python locus/main.py
 ```
 
 ## Example Interactions
+
+**Planning a trip with weather check**:
+
+```
+User: I'm going to San Francisco from New York. What's the weather like?
+
+Assistant: Let me check the current weather and air quality for San Francisco.
+
+[Agent provides weather forecast and air quality information]
+```
+
+**Environmental safety assessment**:
+
+```
+User: Is it safe to visit Beijing right now?
+
+Assistant: Let me check air quality, environmental hazards, and travel warnings for Beijing.
+
+[Agent provides air quality index, pollution levels, and safety advisories]
+```
 
 **Planning a trip**:
 
@@ -169,6 +199,16 @@ Locus/
 │       │   └── tools/
 │       │       ├── flight_finder.py
 │       │       └── transport.py
+│       ├── weather/
+│       │   ├── agent.py
+│       │   ├── prompt.py
+│       │   └── tools/
+│       │       └── weather.py
+│       ├── env_hazards/
+│       │   ├── agent.py
+│       │   ├── prompt.py
+│       │   └── tools/
+│       │       └── air_quality.py
 │       ├── budget/
 │       ├── culture_food/
 │       ├── language/
@@ -200,10 +240,13 @@ pytest
 
 -   **Google Agent Development Kit (ADK)**: Multi-agent framework
 -   **Google Gemini**: AI model for natural language processing
--   **Google Maps Platform**: Transportation and places data
--   **Google Custom Search**: Flight information search
+-   **Google Maps Platform**: Transportation, geocoding, and places data
+-   **Google Air Quality API**: Real-time air quality monitoring and pollution data
+-   **Google Weather API**: Current weather conditions and forecasts
+-   **Google Custom Search**: Flight information and general web search
 -   **Google Cloud Translation**: Language translation services
 -   **Google Places API**: Local attractions and experiences
+-   **Google Timezone API**: Timezone information for travel planning
 
 ## Contributing
 
