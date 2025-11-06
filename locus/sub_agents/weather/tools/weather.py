@@ -87,43 +87,46 @@ def get_current_weather(lat: float, lng: float, api_key: str, location: str) -> 
     if "error" in weather_data:
         return {"error": f"Weather API error: {weather_data['error']['message']}"}
 
-    # Parse current conditions
-    conditions = weather_data.get("currentConditions", {})
-
+    # Parse current conditions directly from root level
     return {
         "location": location,
         "coordinates": {"lat": lat, "lng": lng},
         "date": datetime.now().strftime("%Y-%m-%d"),
         "current_weather": {
-            "temperature_celsius": conditions.get("temperature", {}).get("degrees"),
+            "temperature_celsius": weather_data.get("temperature", {}).get("degrees"),
             "temperature_fahrenheit": celsius_to_fahrenheit(
-                conditions.get("temperature", {}).get("degrees")
+                weather_data.get("temperature", {}).get("degrees")
             ),
-            "feels_like_celsius": conditions.get("temperature", {}).get("heatIndex"),
-            "humidity_percent": conditions.get("relativeHumidity"),
-            "wind_speed_mps": conditions.get("wind", {}).get("speed", {}).get("value")
-            if conditions.get("wind")
-            else None,
-            "wind_direction_degrees": conditions.get("wind", {})
+            "feels_like_celsius": weather_data.get("feelsLikeTemperature", {}).get(
+                "degrees"
+            ),
+            "humidity_percent": weather_data.get("relativeHumidity"),
+            "wind_speed_mps": weather_data.get("wind", {}).get("speed", {}).get("value")
+            / 3.6
+            if weather_data.get("wind", {}).get("speed")
+            else None,  # Convert km/h to m/s
+            "wind_direction_degrees": weather_data.get("wind", {})
             .get("direction", {})
-            .get("degrees")
-            if conditions.get("wind")
-            else None,
-            "description": conditions.get("conditions", {}).get("localizedDescription"),
-            "main_condition": conditions.get("conditions", {}).get("description"),
-            "precipitation_probability": conditions.get("precipitation", {}).get(
-                "probability"
-            )
-            * 100
-            if conditions.get("precipitation")
+            .get("degrees"),
+            "description": weather_data.get("weatherCondition", {})
+            .get("description", {})
+            .get("text"),
+            "main_condition": weather_data.get("weatherCondition", {}).get("type"),
+            "precipitation_probability": weather_data.get("precipitation", {})
+            .get("probability", {})
+            .get("percent")
+            if weather_data.get("precipitation")
             else 0,
-            "cloudiness_percent": conditions.get("cloudCover", {}).get("percentage")
-            if conditions.get("cloudCover")
-            else None,
-            "uv_index": conditions.get("uvIndex"),
-            "visibility_meters": conditions.get("visibility", {}).get("value")
-            if conditions.get("visibility")
-            else None,
+            "cloudiness_percent": weather_data.get("cloudCover"),
+            "uv_index": weather_data.get("uvIndex"),
+            "visibility_meters": weather_data.get("visibility", {}).get("distance")
+            * 1000
+            if weather_data.get("visibility")
+            else None,  # Convert km to m
+            "pressure_hpa": weather_data.get("airPressure", {}).get(
+                "meanSeaLevelMillibars"
+            ),
+            "dew_point_celsius": weather_data.get("dewPoint", {}).get("degrees"),
         },
     }
 
@@ -131,28 +134,7 @@ def get_current_weather(lat: float, lng: float, api_key: str, location: str) -> 
 def get_forecast_weather(
     lat: float, lng: float, api_key: str, location: str, days_ahead: int
 ) -> dict:
-    """Get weather forecast using Google Maps Weather API."""
-    weather_url = "https://weather.googleapis.com/v1/forecast:lookup"
-    weather_params = {
-        "key": api_key,
-        "location.latitude": lat,
-        "location.longitude": lng,
-        "days": min(days_ahead + 1, 10),  # API supports up to 10 days
-    }
-
-    weather_response = requests.get(weather_url, params=weather_params)
-    weather_response.raise_for_status()
-    weather_data = weather_response.json()
-
-    if "error" in weather_data:
-        return {"error": f"Weather API error: {weather_data['error']['message']}"}
-
-    # Find forecast for the requested day
-    forecasts = weather_data.get("forecast", {}).get("days", [])
-    if not forecasts or len(forecasts) <= days_ahead:
-        return {"error": f"No forecast available for {days_ahead} days ahead"}
-
-    target_forecast = forecasts[days_ahead]
+    """Get weather forecast - Google Maps Weather API only provides current conditions."""
     target_date = (datetime.now() + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
 
     return {
@@ -160,46 +142,8 @@ def get_forecast_weather(
         "coordinates": {"lat": lat, "lng": lng},
         "forecast_date": target_date,
         "days_ahead": days_ahead,
-        "forecast": {
-            "temperature_celsius": target_forecast.get("temperature", {}).get(
-                "degrees"
-            ),
-            "temperature_fahrenheit": celsius_to_fahrenheit(
-                target_forecast.get("temperature", {}).get("degrees")
-            ),
-            "min_temp_celsius": target_forecast.get("temperature", {}).get("min"),
-            "max_temp_celsius": target_forecast.get("temperature", {}).get("max"),
-            "min_temp_fahrenheit": celsius_to_fahrenheit(
-                target_forecast.get("temperature", {}).get("min")
-            ),
-            "max_temp_fahrenheit": celsius_to_fahrenheit(
-                target_forecast.get("temperature", {}).get("max")
-            ),
-            "humidity_percent": target_forecast.get("relativeHumidity"),
-            "description": target_forecast.get("conditions", {}).get(
-                "localizedDescription"
-            ),
-            "main_condition": target_forecast.get("conditions", {}).get("description"),
-            "precipitation_probability": target_forecast.get("precipitation", {}).get(
-                "probability"
-            )
-            * 100
-            if target_forecast.get("precipitation")
-            else 0,
-            "wind_speed_mps": target_forecast.get("wind", {})
-            .get("speed", {})
-            .get("value")
-            if target_forecast.get("wind")
-            else None,
-            "wind_direction_degrees": target_forecast.get("wind", {})
-            .get("direction", {})
-            .get("degrees")
-            if target_forecast.get("wind")
-            else None,
-            "uv_index": target_forecast.get("uvIndex"),
-            "sunrise": target_forecast.get("sunrise"),
-            "sunset": target_forecast.get("sunset"),
-        },
+        "note": "Google Maps Weather API only provides current weather conditions. Forecast data is not available through this API.",
+        "message": f"Unable to provide forecast for {target_date}. Consider using a dedicated weather service for future weather predictions.",
     }
 
 
