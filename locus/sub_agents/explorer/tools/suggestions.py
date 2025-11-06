@@ -1,8 +1,11 @@
 import os
 import googlemaps
+from typing import Optional
 
 
-def suggest_experiences(location: str, mood: str = None, weather: str = None) -> dict:
+def suggest_experiences(
+    location: str, mood: Optional[str] = None, weather: Optional[str] = None
+) -> dict:
     """
     Suggests experiences based on location, mood, or weather using Google Places API.
 
