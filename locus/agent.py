@@ -1,4 +1,5 @@
 from google.adk.agents import Agent
+from dotenv import load_dotenv
 from .prompt import ROUTER_PROMPT
 from locus.sub_agents.navigator.agent import navigator_agent
 from locus.sub_agents.weather.agent import weather_agent
@@ -9,6 +10,9 @@ from locus.sub_agents.language.agent import language_agent
 from locus.sub_agents.safety.agent import safety_agent
 from locus.sub_agents.explorer.agent import explorer_agent
 from locus.sub_agents.memory.agent import memory_agent
+
+# Load environment variables from .env file
+load_dotenv()
 
 root_agent = Agent(
     name="locus",
