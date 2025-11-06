@@ -12,7 +12,7 @@ from locus.sub_agents.memory.agent import memory_agent
 
 root_agent = Agent(
     name="locus",
-    model="gemini-2.0-flash",  # Or any other suitable model
+    model="gemini-2.5-flash",  # Or any other suitable model
     instruction=ROUTER_PROMPT,
     description="Comprehensive AI travel assistant coordinating specialized agents for weather, navigation, safety, culture, language, budget, exploration, and trip memory management.",
     sub_agents=[

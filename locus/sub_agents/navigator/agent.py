@@ -8,7 +8,7 @@ from .tools.places_search import search_places
 
 navigator_agent = Agent(
     name="navigator_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     instruction=NAVIGATOR_PROMPT,
     description="Plans and optimizes routes with flight price comparisons, local transport options, location search, and place finding for comprehensive travel navigation.",
     tools=[

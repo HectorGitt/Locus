@@ -8,7 +8,7 @@ from .tools.speech_translator import speech_translation_guide
 
 language_agent = Agent(
     name="language_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     instruction=LANGUAGE_PROMPT,
     description="Comprehensive communication support with translation, phrasebooks, pronunciation coaching, slang detection, and cultural communication guidance for travelers.",
     tools=[
