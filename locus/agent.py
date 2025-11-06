@@ -10,13 +10,14 @@ from locus.sub_agents.language.agent import language_agent
 from locus.sub_agents.safety.agent import safety_agent
 from locus.sub_agents.explorer.agent import explorer_agent
 from locus.sub_agents.memory.agent import memory_agent
+from .shared_libraries.model_config import get_model_type
 
 # Load environment variables from .env file
 load_dotenv()
 
 root_agent = Agent(
     name="locus",
-    model="gemini-2.5-flash",  # Or any other suitable model
+    model=get_model_type(),
     instruction=ROUTER_PROMPT,
     description="Comprehensive AI travel assistant coordinating specialized agents for weather, navigation, safety, culture, language, budget, exploration, and trip memory management.",
     sub_agents=[

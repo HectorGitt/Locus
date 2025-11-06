@@ -5,10 +5,11 @@ from .tools.phrasebook import generate_phrasebook
 from .tools.slang_detector import detect_slang, explain_communication_norm
 from .tools.pronunciation_coach import pronunciation_coach
 from .tools.speech_translator import speech_translation_guide
+from ...shared_libraries.model_config import get_model_type
 
 language_agent = Agent(
     name="language_agent",
-    model="gemini-2.5-flash",
+    model=get_model_type(),
     instruction=LANGUAGE_PROMPT,
     description="Comprehensive communication support with translation, phrasebooks, pronunciation coaching, slang detection, and cultural communication guidance for travelers.",
     tools=[

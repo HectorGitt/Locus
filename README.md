@@ -77,6 +77,7 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 2. Obtain the following API keys from Google Cloud Console:
 
     - **Google AI Studio API Key**: For Gemini model access
+    - **Model Type**: Choose your preferred AI model (default: "gemini-2.5-flash")
     - **Google Maps API Key**: For transportation, geocoding, and places data
     - **Google Custom Search API Key**: For flight search and general information
     - **Google Custom Search Engine ID**: Create a CSE at https://cse.google.com/
@@ -89,6 +90,7 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 3. Update `.env` with your actual API keys:
     ```env
     GEMINI_API_KEY=your_gemini_api_key_here
+    MODEL_TYPE=gemini-2.5-flash
     GOOGLE_MAPS_API_KEY=your_maps_api_key_here
     GOOGLE_CUSTOM_SEARCH_API_KEY=your_custom_search_api_key_here
     GOOGLE_CUSTOM_SEARCH_CSE_ID=your_custom_search_engine_id_here
@@ -193,7 +195,8 @@ Locus/
 │   ├── prompt.py             # Router prompts
 │   ├── shared_libraries/     # Shared utility functions
 │   │   ├── __init__.py
-│   │   └── geocoding.py      # Shared geocoding utility
+│   │   ├── geocoding.py      # Shared geocoding utility
+│   │   └── model_config.py   # Shared model configuration
 │   └── sub_agents/
 │       ├── navigator/
 │       │   ├── agent.py

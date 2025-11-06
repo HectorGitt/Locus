@@ -5,10 +5,11 @@ from .tools.flight_prices import find_flight_prices
 from .tools.transport import get_local_transport
 from .tools.location_search import search_location
 from .tools.places_search import search_places
+from ...shared_libraries.model_config import get_model_type
 
 navigator_agent = Agent(
     name="navigator_agent",
-    model="gemini-2.5-flash",
+    model=get_model_type(),
     instruction=NAVIGATOR_PROMPT,
     description="Plans and optimizes routes with flight price comparisons, local transport options, location search, and place finding for comprehensive travel navigation.",
     tools=[
