@@ -5,16 +5,13 @@ Locus is a multi-agent AI travel assistant built with Google Agent Development K
 ## Features
 
 -   **Multi-Agent Architecture**: Modular design with specialized sub-agents
--   **Flight Planning**: Find flights between destinations using Google Custom Search
+-   **Flight Planning**: Find flights between destinations using Google Search
 -   **Local Transport**: Get public transit and transportation options using Google Maps
 -   **Weather & Climate**: Real-time weather forecasts and air quality monitoring
 -   **Environmental Safety**: Air quality assessment, environmental hazards, and travel warnings
--   **Budget Management**: Currency conversion and budget planning
--   **Cultural & Food Recommendations**: Local cuisine and cultural insights
 -   **Language Support**: Real-time translation services
--   **Safety Information**: Travel safety alerts and advisories
 -   **Experience Suggestions**: Local attractions and activities
--   **Memory System**: Context-aware conversation history
+-   **Web Search**: Professional search capabilities for information and research
 
 ## Architecture
 
@@ -26,13 +23,10 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 
 -   **Navigator**: Handles flight booking and local transportation
 -   **Weather**: Provides real-time weather forecasts and air quality monitoring
--   **Env Hazards**: Assesses environmental safety, air quality, and travel warnings
--   **Budget**: Manages currency conversion and travel budgets
--   **Culture & Food**: Provides local food and cultural recommendations
+-   **Environmental Hazards**: Assesses environmental safety, air quality, and travel warnings
 -   **Language**: Offers translation services
--   **Safety**: Delivers travel safety information
 -   **Explorer**: Suggests local experiences and attractions
--   **Memory**: Maintains conversation context and history
+-   **Search**: Professional web search and information retrieval
 
 ## Prerequisites
 
@@ -77,10 +71,8 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 2. Obtain the following API keys from Google Cloud Console:
 
     - **Google AI Studio API Key**: For Gemini model access
-    - **Model Type**: Choose your preferred AI model (default: "gemini-2.5-flash")
+    - **Model Type**: Choose your preferred AI model (default: "gemini-2.0-flash-exp")
     - **Google Maps API Key**: For transportation, geocoding, and places data
-    - **Google Custom Search API Key**: For flight search and general information
-    - **Google Custom Search Engine ID**: Create a CSE at https://cse.google.com/
     - **Google Cloud Translation API Key**: For language translation
     - **Google Air Quality API Key**: For real-time air quality monitoring
     - **Google Weather API Key**: For weather forecasts and conditions
@@ -90,10 +82,8 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 3. Update `.env` with your actual API keys:
     ```env
     GEMINI_API_KEY=your_gemini_api_key_here
-    MODEL_TYPE=gemini-2.5-flash
+    MODEL_TYPE=gemini-2.0-flash-exp
     GOOGLE_MAPS_API_KEY=your_maps_api_key_here
-    GOOGLE_CUSTOM_SEARCH_API_KEY=your_custom_search_api_key_here
-    GOOGLE_CUSTOM_SEARCH_CSE_ID=your_custom_search_engine_id_here
     GOOGLE_CLOUD_TRANSLATION_API_KEY=your_translation_api_key_here
     GOOGLE_AIR_QUALITY_API_KEY=your_air_quality_api_key_here
     GOOGLE_WEATHER_API_KEY=your_weather_api_key_here
@@ -103,10 +93,7 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 
 ### Google Custom Search Engine Setup
 
-1. Go to [Google Custom Search Engine](https://cse.google.com/)
-2. Create a new search engine
-3. Set "Sites to search" to "Search the entire web"
-4. Copy the Search engine ID to your `.env` file
+No longer required - search functionality is handled through the built-in Google Search tool in the Search Agent.
 
 ## Usage
 
@@ -174,14 +161,14 @@ Assistant: I can provide public transit options using Google Maps Directions API
 [Agent provides transit routes and walking directions]
 ```
 
-**Cultural recommendations**:
+**Experience suggestions**:
 
 ```
-User: What should I eat in San Francisco?
+User: What should I do in San Francisco?
 
-Assistant: Let me suggest some local food options and cultural experiences.
+Assistant: Let me suggest some local experiences and attractions.
 
-[Agent provides restaurant recommendations and cultural insights]
+[Agent provides activity recommendations and local insights]
 ```
 
 ## Development
@@ -201,7 +188,7 @@ Locus/
 │       ├── navigator/
 │       │   ├── agent.py
 │       │   └── tools/
-│       │       ├── flight_finder.py
+│       │       ├── places_search.py
 │       │       └── transport.py
 │       ├── weather/
 │       │   ├── agent.py
@@ -213,12 +200,20 @@ Locus/
 │       │   ├── prompt.py
 │       │   └── tools/
 │       │       └── air_quality.py
-│       ├── budget/
-│       ├── culture_food/
 │       ├── language/
-│       ├── safety/
+│       │   ├── agent.py
+│       │   ├── prompt.py
+│       │   └── tools/
+│       │       ├── translator.py
+│       │       ├── phrasebook.py
+│       │       └── speech_translator.py
 │       ├── explorer/
-│       └── memory/
+│       │   ├── agent.py
+│       │   └── tools/
+│       │       └── places_search.py
+│       └── search/
+│           ├── agent.py
+│           └── __init__.py
 ├── .env                      # Environment variables
 ├── .env.example             # Environment template
 ├── requirements.txt         # Python dependencies
@@ -247,7 +242,7 @@ pytest
 -   **Google Maps Platform**: Transportation, geocoding, and places data
 -   **Google Air Quality API**: Real-time air quality monitoring and pollution data
 -   **Google Weather API**: Current weather conditions and forecasts
--   **Google Custom Search**: Flight information and general web search
+-   **Google Search**: Built-in web search capabilities (via ADK)
 -   **Google Cloud Translation**: Language translation services
 -   **Google Places API**: Local attractions and experiences
 -   **Google Timezone API**: Timezone information for travel planning
