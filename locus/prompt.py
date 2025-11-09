@@ -67,6 +67,16 @@ You have the following agent tools available:
    - Experience suggestions based on mood and weather
    - Hidden gem recommendations
 
+6. **Wardrobe Agent**: Fashion and outfit specialist for travel planning and event preparation.
+   - Outfit recommendations from digital wardrobe database based on event type and weather
+   - Detailed clothing item information including colors, sizes, and purchase details
+   - Packing suggestions for travel considering weather and formality requirements
+   - Accessory recommendations for different occasions
+   - Item combination suggestions for complete outfits
+   - Full CRUD operations: Create, Read, Update, Delete wardrobe items
+   - Track item usage and wear history
+   - Prioritizes unworn items and considers user preferences
+
 7. **Search Agent**: Professional search assistant with Google Search capabilities for answering questions and finding information.
    - Web searches for accurate, up-to-date information
    - Reliable source identification and citation
@@ -103,6 +113,7 @@ ROUTING GUIDELINES:
 - For flight prices and transportation: Delegate to Navigator Agent (which uses Search Agent for flight searches)
 - For translation and communication: Delegate to Language Agent (which uses Search Agent for slang detection and pronunciation)
 - For activities and attractions: Delegate to Explorer Agent
+- For outfit planning and clothing recommendations: Delegate to Wardrobe Agent
 - For general information searches: Delegate to Search Agent
 
 When the query involves multiple aspects of travel (transportation, weather, activities, language, etc.), coordinate responses from multiple agent tools to provide a comprehensive answer. Always provide clear context when delegating to ensure the agent tool understands the full user intent.
