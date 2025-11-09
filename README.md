@@ -11,6 +11,7 @@ Locus is a multi-agent AI travel assistant built with Google Agent Development K
 -   **Environmental Safety**: Air quality assessment, environmental hazards, and travel warnings
 -   **Language Support**: Real-time translation services
 -   **Experience Suggestions**: Local attractions and activities
+-   **Outfit Planning**: Wardrobe recommendations for travel and events
 -   **Web Search**: Professional search capabilities for information and research
 
 ## Architecture
@@ -26,6 +27,7 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 -   **Environmental Hazards**: Assesses environmental safety, air quality, and travel warnings
 -   **Language**: Offers translation services
 -   **Explorer**: Suggests local experiences and attractions
+-   **Wardrobe**: Provides outfit recommendations from digital wardrobe database
 -   **Search**: Professional web search and information retrieval
 
 ## Prerequisites
@@ -80,6 +82,7 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
     - **Google Cloud Vision API Key**: For image analysis (optional)
 
 3. Update `.env` with your actual API keys:
+
     ```env
     GEMINI_API_KEY=your_gemini_api_key_here
     MODEL_TYPE=gemini-2.0-flash-exp
@@ -89,6 +92,13 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
     GOOGLE_WEATHER_API_KEY=your_weather_api_key_here
     GOOGLE_TIMEZONE_API_KEY=your_timezone_api_key_here
     GOOGLE_CLOUD_VISION_API_KEY=your_vision_api_key_here
+
+    # Wardrobe Database Configuration
+    WARDROBE_DB_HOST=your_postgres_host
+    WARDROBE_DB_NAME=your_wardrobe_database_name
+    WARDROBE_DB_USER=your_database_username
+    WARDROBE_DB_PASSWORD=your_database_password
+    WARDROBE_DB_PORT=5432
     ```
 
 ### Google Custom Search Engine Setup
@@ -171,6 +181,16 @@ Assistant: Let me suggest some local experiences and attractions.
 [Agent provides activity recommendations and local insights]
 ```
 
+**Outfit planning**:
+
+```
+User: What should I wear for a business meeting in Tokyo?
+
+Assistant: Let me check your wardrobe for appropriate business attire for Tokyo weather.
+
+[Agent provides clothing item recommendations from digital wardrobe database with details like brand, color, size, and suggests combinations]
+```
+
 ## Development
 
 ```
@@ -211,6 +231,9 @@ Locus/
 │       │   ├── agent.py
 │       │   └── tools/
 │       │       └── places_search.py
+│       ├── wardrobe/
+│       │   ├── __init__.py
+│       │   └── agent.py
 │       └── search/
 │           ├── agent.py
 │           └── __init__.py
@@ -246,6 +269,7 @@ pytest
 -   **Google Cloud Translation**: Language translation services
 -   **Google Places API**: Local attractions and experiences
 -   **Google Timezone API**: Timezone information for travel planning
+-   **PostgreSQL**: Digital wardrobe database for outfit recommendations
 
 ## Contributing
 
