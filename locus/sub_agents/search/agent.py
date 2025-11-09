@@ -4,7 +4,7 @@ from ...shared_libraries.model_config import get_model_type
 
 search_agent = Agent(
     name="search_agent",
-    model=get_model_type(),
+    model=get_model_type("sub_agent"),
     instruction="""
 You are the Search Agent, a professional search assistant with Google Search capabilities for answering questions and finding information.
 

@@ -7,7 +7,7 @@ from ...shared_libraries.model_config import get_model_type
 
 language_agent = Agent(
     name="language_agent",
-    model=get_model_type(),
+    model=get_model_type("sub_agent"),
     instruction=LANGUAGE_PROMPT,
     description="Comprehensive communication support with translation, phrasebooks, and cultural communication guidance for travelers.",
     tools=[

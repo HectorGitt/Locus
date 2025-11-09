@@ -25,7 +25,7 @@ wardrobe_tool = AgentTool(agent=wardrobe_agent)
 
 root_agent = Agent(
     name="locus",
-    model=get_model_type(),
+    model=get_model_type("main"),
     instruction=ROUTER_PROMPT,
     description="Comprehensive AI travel assistant coordinating specialized agents for weather, navigation, safety, culture, language, budget, exploration, and wardrobe planning.",
     tools=[

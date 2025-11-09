@@ -8,7 +8,7 @@ from ...shared_libraries.model_config import get_model_type
 def create_navigator_agent():
     return Agent(
         name="navigator_agent",
-        model=get_model_type(),
+        model=get_model_type("sub_agent"),
         instruction=NAVIGATOR_PROMPT,
         description="Plans and optimizes routes with local transport options and place finding for comprehensive travel navigation.",
         tools=[

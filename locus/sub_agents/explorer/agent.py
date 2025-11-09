@@ -5,7 +5,7 @@ from ...shared_libraries.model_config import get_model_type
 
 explorer_agent = Agent(
     name="explorer_agent",
-    model=get_model_type(),
+    model=get_model_type("sub_agent"),
     instruction=EXPLORER_PROMPT,
     description="Suggests experiences, hidden spots, and events based on mood or weather.",
     tools=[suggest_experiences],
