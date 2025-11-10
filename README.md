@@ -311,3 +311,228 @@ During the development of Locus, we encountered and overcame several significant
 -   **Environment Validation**: Added database connection testing utilities to verify configuration before deployment
 
 These challenges helped us build a more robust, maintainable, and user-friendly multi-agent travel assistant.
+
+## Deployment
+
+Locus can be deployed to Google Cloud Run using the provided PowerShell deployment script. The deployment process uses Google Cloud Build to containerize the application.
+
+### Prerequisites for Deployment
+
+-   **Google Cloud SDK**: Install and configure `gcloud` CLI
+-   **Docker**: Required for local builds (optional if using Cloud Build)
+-   **Google Cloud Project**: Active GCP project with billing enabled
+-   **Required APIs Enabled**:
+    -   Cloud Run API
+    -   Cloud Build API
+    -   Artifact Registry API
+    -   Secret Manager API
+
+### Deployment Options
+
+#### Option 1: Automated Deployment (Recommended)
+
+Use the provided PowerShell deployment script:
+
+```powershell
+.\deploy.ps1
+```
+
+**What it does:**
+
+-   Configures Python environment for gcloud
+-   Sets model types (main agent: `gemini-2.5-flash-native-audio-preview-09-2025`, sub-agents: `gemini-2.0-flash`)
+-   Creates temporary deployment folder
+-   Generates Dockerfile automatically
+-   Builds and deploys to Cloud Run with UI
+-   Cleans up temporary files
+
+**Configuration:**
+The script automatically configures:
+
+-   Project ID: `pivotal-equinox-472613-d3`
+-   Region: `us-central1`
+-   Service Name: `locus-agent-service`
+-   Port: `8000`
+
+#### Option 2: Manual Deployment
+
+1. **Create secrets for sensitive data:**
+
+```powershell
+.\create-secrets.ps1
+```
+
+This creates Google Cloud secrets for:
+
+-   API keys (Gemini, Google Maps, Translation, Custom Search)
+-   Database credentials (host, name, user, password, port)
+
+2. **Grant service account access to secrets:**
+
+```powershell
+.\grant-secret-access.ps1
+```
+
+3. **Deploy using ADK CLI:**
+
+```bash
+adk deploy cloud_run \
+  --project=YOUR_PROJECT_ID \
+  --region=us-central1 \
+  --service_name=locus-agent-service \
+  --with_ui \
+  ./locus
+```
+
+#### Option 3: Manual gcloud Deployment
+
+```bash
+gcloud run deploy locus-agent-service \
+  --source ./locus \
+  --platform managed \
+  --region us-central1 \
+  --project YOUR_PROJECT_ID \
+  --allow-unauthenticated
+```
+
+### Deployment Scripts
+
+#### `deploy.ps1`
+
+Main deployment script with:
+
+-   Automatic Python environment configuration
+-   Model type environment variables
+-   Custom temp folder management
+-   Error handling and status reporting
+
+#### `create-secrets.ps1`
+
+Creates Google Cloud secrets for:
+
+-   `GEMINI_API_KEY`
+-   `GOOGLE_API_KEY`
+-   `GOOGLE_MAPS_API_KEY`
+-   `GOOGLE_CUSTOM_SEARCH_API_KEY`
+-   `GOOGLE_CUSTOM_SEARCH_CSE_ID`
+-   `GOOGLE_CLOUD_TRANSLATION_API_KEY`
+-   `WARDROBE_DB_HOST`
+-   `WARDROBE_DB_NAME`
+-   `WARDROBE_DB_USER`
+-   `WARDROBE_DB_PASSWORD`
+-   `WARDROBE_DB_PORT`
+
+#### `grant-secret-access.ps1`
+
+Grants IAM policy bindings for Cloud Run service account to access all secrets.
+
+### Deployment Challenges and Solutions
+
+#### Challenge 1: Docker Daemon Not Running
+
+**Error:** `[WinError 2] The system cannot find the file specified`
+
+**Solution:**
+
+-   Start Docker Desktop before deployment
+-   Or use Cloud Build (remote building) instead of local Docker
+
+#### Challenge 2: gcloud Python Module Issues
+
+**Error:** `No module named 'grpc'`
+
+**Solution:**
+Configure gcloud to use venv Python:
+
+```powershell
+$env:CLOUDSDK_PYTHON = ".\venv\Scripts\python.exe"
+```
+
+This is now automatically handled in `deploy.ps1`.
+
+#### Challenge 3: Windows Path Issues with subprocess
+
+**Error:** Command execution failures on Windows
+
+**Solution:**
+
+-   Added `shell=True` to subprocess.run calls
+-   Fixed path handling for Windows PowerShell
+-   Used absolute paths for temp folders
+
+#### Challenge 4: Temp Folder Permissions
+
+**Error:** Access denied or path too long errors
+
+**Solution:**
+
+-   Changed from system temp directory to project-relative `.\deployment\temp`
+-   Proper cleanup in finally block
+-   Created deployment folder structure
+
+### Post-Deployment
+
+After successful deployment:
+
+1. **Access your deployed service:**
+
+    ```
+    https://locus-agent-service-[PROJECT-ID].us-central1.run.app
+    ```
+
+2. **Configure secrets access** (if not already done):
+
+    ```powershell
+    .\grant-secret-access.ps1
+    ```
+
+3. **Test the deployment:**
+
+    - Open the service URL in your browser
+    - Interact with the Locus agent through the UI
+    - Verify all sub-agents are responding correctly
+
+4. **Monitor logs:**
+    ```bash
+    gcloud run logs read locus-agent-service --project=YOUR_PROJECT_ID
+    ```
+
+### Environment Variables in Cloud Run
+
+The deployment automatically sets:
+
+-   `MODEL_TYPE_MAIN`: gemini-2.5-flash-native-audio-preview-09-2025
+-   `MODEL_TYPE_SUB`: gemini-2.0-flash
+-   `GOOGLE_CLOUD_PROJECT`: Your GCP project ID
+-   `GOOGLE_CLOUD_LOCATION`: us-central1
+
+Secrets are mounted as environment variables via Secret Manager.
+
+### Cost Optimization
+
+To minimize Cloud Run costs:
+
+-   Set minimum instances to 0 (scale to zero when idle)
+-   Use appropriate memory/CPU limits
+-   Enable request-based autoscaling
+-   Monitor and optimize cold start times
+
+### Troubleshooting Deployment
+
+**Issue: Build fails**
+
+-   Check Dockerfile generation in temp folder
+-   Verify requirements.txt includes all dependencies
+-   Ensure Python 3.11+ compatibility
+
+**Issue: Runtime errors**
+
+-   Verify all secrets are created and accessible
+-   Check Cloud Run logs for detailed error messages
+-   Ensure database connectivity from Cloud Run
+
+**Issue: Slow response times**
+
+-   Increase Cloud Run memory allocation
+-   Consider setting minimum instances > 0
+-   Optimize model selection for sub-agents
