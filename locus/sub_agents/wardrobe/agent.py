@@ -11,11 +11,12 @@ from .tools.crud_tools import (
     delete_wardrobe_item,
     mark_item_worn,
 )
+from ...shared_libraries.model_config import get_model_type
 
 
 wardrobe_agent = Agent(
     name="wardrobe_agent",
-    model="gemini-2.5-flash",
+    model=get_model_type("sub_agent"),
     instruction="""
 You are the Wardrobe Agent, a fashion and outfit specialist that helps travelers and event planners select appropriate clothing and accessories.
 
