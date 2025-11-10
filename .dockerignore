@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.tox/
+tests/
+test_*.py
+
+# Documentation
+*.md
+docs/
+BUILD_BLOG.md
+README.md
+conv.md
+
+# Deployment scripts
+deploy.ps1
+create-secrets.ps1
+create-secrets.sh
+grant-secret-access.ps1
+deployment/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Evaluation
+eval/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
