@@ -73,24 +73,19 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 2. Obtain the following API keys from Google Cloud Console:
 
     - **Google AI Studio API Key**: For Gemini model access
-    - **Model Type**: Choose your preferred AI model (default: "gemini-2.0-flash-exp")
-    - **Google Maps API Key**: For transportation, geocoding, and places data
+    - **Model Types**: Configure model types for main agent and sub-agents
+    - **Google Maps API Key**: For Maps Platform services (geocoding, directions, places, weather, air quality, and timezone)
     - **Google Cloud Translation API Key**: For language translation
-    - **Google Air Quality API Key**: For real-time air quality monitoring
-    - **Google Weather API Key**: For weather forecasts and conditions
-    - **Google Timezone API Key**: For timezone information
     - **Google Cloud Vision API Key**: For image analysis (optional)
 
 3. Update `.env` with your actual API keys:
 
     ```env
     GEMINI_API_KEY=your_gemini_api_key_here
-    MODEL_TYPE=gemini-2.0-flash-exp
+    MODEL_TYPE_MAIN=gemini-2.0-flash-exp
+    MODEL_TYPE_SUB=gemini-2.5-flash
     GOOGLE_MAPS_API_KEY=your_maps_api_key_here
     GOOGLE_CLOUD_TRANSLATION_API_KEY=your_translation_api_key_here
-    GOOGLE_AIR_QUALITY_API_KEY=your_air_quality_api_key_here
-    GOOGLE_WEATHER_API_KEY=your_weather_api_key_here
-    GOOGLE_TIMEZONE_API_KEY=your_timezone_api_key_here
     GOOGLE_CLOUD_VISION_API_KEY=your_vision_api_key_here
 
     # Wardrobe Database Configuration
@@ -262,35 +257,57 @@ pytest
 
 -   **Google Agent Development Kit (ADK)**: Multi-agent framework
 -   **Google Gemini**: AI model for natural language processing
--   **Google Maps Platform**: Transportation, geocoding, and places data
--   **Google Air Quality API**: Real-time air quality monitoring and pollution data
--   **Google Weather API**: Current weather conditions and forecasts
+-   **Google Maps Platform**: Single API key for multiple services including:
+    -   Maps API: Transportation routing and directions
+    -   Geocoding API: Location coordinate conversion
+    -   Places API: Local attractions and points of interest
+    -   Weather API: Current weather conditions and forecasts
+    -   Air Quality API: Real-time air quality monitoring and pollution data
+    -   Timezone API: Timezone information
 -   **Google Search**: Built-in web search capabilities (via ADK)
 -   **Google Cloud Translation**: Language translation services
--   **Google Places API**: Local attractions and experiences
--   **Google Timezone API**: Timezone information for travel planning
 -   **PostgreSQL**: Digital wardrobe database for outfit recommendations
 
-## Contributing
+## Challenges Faced
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+During the development of Locus, we encountered and overcame several significant challenges:
 
-## License
+### Database Integration Challenges
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+-   **Password Authentication Issues**: Initial database connection failures due to incorrect password configuration and PostgreSQL authentication restrictions
+-   **Schema Evolution**: Adapting the wardrobe database schema to match simplified requirements while maintaining backward compatibility
+-   **Connection Management**: Implementing proper database session handling and connection pooling for multi-agent operations
 
-## Support
+### Multi-Agent Coordination
 
-For issues and questions:
+-   **Waiting Message Duplication**: Initial implementation showed waiting messages twice during comprehensive guide generation due to redundant instructions in the agent prompt
+-   **Agent Call Sequencing**: Coordinating multiple sub-agents to work together seamlessly for comprehensive travel guides without user interruption
+-   **Response Synchronization**: Ensuring all agent responses are collected before providing final synthesized recommendations
 
--   Open an issue on GitHub
--   Check the ADK documentation
--   Review Google Cloud API documentation
+### Code Architecture and Organization
 
----
+-   **Code Duplication**: Eliminating repetitive database operations, error handling, and item formatting across multiple functions
+-   **Modular Refactoring**: Restructuring the wardrobe agent by moving database utilities and CRUD operations into separate tool files for better maintainability
+-   **Import Management**: Properly organizing imports and dependencies across the modular architecture
 
-Built with ❤️ using Google Agent Development Kit
+### API Integration Complexities
+
+-   **Multiple Google APIs**: Coordinating various Google Cloud services (Maps, Weather, Air Quality, Translation, Search) with proper error handling
+-   **Rate Limiting**: Managing API call frequencies and implementing fallback mechanisms for service outages
+-   **Authentication Management**: Securely handling multiple API keys and environment configurations
+
+### Development Workflow
+
+-   **Testing Multi-Agent Systems**: Developing comprehensive test strategies for interdependent agent interactions
+-   **Error Propagation**: Ensuring meaningful error messages bubble up correctly through the agent hierarchy
+-   **Performance Optimization**: Balancing response times with comprehensive information gathering
+
+### Solutions Implemented
+
+-   **Helper Functions**: Created reusable database utilities (`get_db()`, `close_db()`, `item_to_dict()`, `handle_db_error()`) to eliminate code duplication
+-   **Modular Tools**: Organized database operations into separate tool files (`db_utils.py`, `query_tools.py`, `crud_tools.py`)
+-   **Streamlined Prompts**: Consolidated waiting message instructions to prevent duplication while maintaining clear user communication
+-   **Robust Error Handling**: Implemented consistent error response formats across all agent operations
+-   **Environment Validation**: Added database connection testing utilities to verify configuration before deployment
+
+These challenges helped us build a more robust, maintainable, and user-friendly multi-agent travel assistant.
