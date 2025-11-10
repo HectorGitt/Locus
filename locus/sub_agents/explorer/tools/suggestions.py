@@ -5,15 +5,17 @@ from locus.shared_libraries.geocoding import geocode_location
 
 
 def suggest_experiences(
-    location: str, mood: Optional[str] = None, weather: Optional[str] = None
+    location: str, 
+    preferences: Optional[str] = None, 
+    weather: Optional[str] = None
 ) -> dict:
     """
-    Suggests experiences based on location, mood, or weather using Google Places API.
+    Suggests experiences based on location, user preferences, or weather using Google Places API.
 
     Args:
         location (str): The location to find experiences.
-        mood (str, optional): The user's current mood (e.g., "adventurous", "relaxed").
-        weather (str, optional): The current weather (e.g., "sunny", "rainy").
+        preferences (str, optional): What the user is looking for (e.g., "adventure activities", "cultural sites", "relaxation", "nightlife", "family-friendly").
+        weather (str, optional): The current weather conditions (e.g., "sunny", "rainy").
 
     Returns:
         dict: A dictionary containing a list of suggested experiences.
@@ -33,16 +35,33 @@ def suggest_experiences(
         lat = geocode_result["lat"]
         lng = geocode_result["lng"]
 
-        # Determine place types based on mood and weather
+        # Determine place types based on preferences and weather
         place_types = []
-        if mood == "adventurous":
-            place_types = ["amusement_park", "park", "campground"]
-        elif mood == "relaxed":
-            place_types = ["park", "cafe", "spa"]
-        elif weather == "sunny":
-            place_types = ["beach", "park", "outdoor_activity"]
-        elif weather == "rainy":
-            place_types = ["museum", "movie_theater", "shopping_mall"]
+        if preferences:
+            pref_lower = preferences.lower()
+            if "adventure" in pref_lower or "active" in pref_lower or "outdoor" in pref_lower:
+                place_types = ["amusement_park", "park", "campground", "hiking_area"]
+            elif "relax" in pref_lower or "calm" in pref_lower or "peaceful" in pref_lower:
+                place_types = ["park", "cafe", "spa", "library"]
+            elif "culture" in pref_lower or "art" in pref_lower or "history" in pref_lower:
+                place_types = ["museum", "art_gallery", "historical_site", "church"]
+            elif "food" in pref_lower or "dining" in pref_lower or "restaurant" in pref_lower:
+                place_types = ["restaurant", "cafe", "bar", "food"]
+            elif "shop" in pref_lower or "shopping" in pref_lower:
+                place_types = ["shopping_mall", "store", "market"]
+            elif "nightlife" in pref_lower or "night" in pref_lower or "party" in pref_lower:
+                place_types = ["night_club", "bar", "casino"]
+            elif "family" in pref_lower or "kids" in pref_lower:
+                place_types = ["amusement_park", "zoo", "aquarium", "park"]
+            else:
+                place_types = ["tourist_attraction", "point_of_interest"]
+        elif weather:
+            if weather.lower() in ["sunny", "clear", "nice"]:
+                place_types = ["park", "beach", "outdoor_activity", "hiking_area"]
+            elif weather.lower() in ["rainy", "wet", "cold"]:
+                place_types = ["museum", "movie_theater", "shopping_mall", "cafe"]
+            else:
+                place_types = ["tourist_attraction", "point_of_interest"]
         else:
             place_types = ["tourist_attraction", "point_of_interest"]
 
