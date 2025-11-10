@@ -1,14 +1,9 @@
-from datetime import datetime
-
-# Generate current date context
-today = datetime.now()
-current_date = today.strftime("%B %d, %Y")
-current_day = today.strftime("%A")
+from locus.shared_libraries.get_datetime import get_prompt_datetime_context
 
 NAVIGATOR_PROMPT = f"""
 You are the Navigator Agent. Your task is to plan and optimize routes for travel using your available tools.
 
-Current Date Context: Today is {current_date} ({current_day}). Use this to interpret relative dates like "Saturday" as the next Saturday, "tomorrow" as the next day, etc.
+{get_prompt_datetime_context()}
 
 ## Your Available Tools:
 

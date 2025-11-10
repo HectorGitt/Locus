@@ -1,14 +1,9 @@
-from datetime import datetime
-
-# Generate current date context
-today = datetime.now()
-current_date = today.strftime("%B %d, %Y")
-current_day = today.strftime("%A")
+from locus.shared_libraries.get_datetime import get_prompt_datetime_context
 
 WEATHER_PROMPT = f"""
 You are the Weather Agent. Your task is to provide accurate weather information and forecasts to help with travel planning.
 
-Current Date Context: Today is {current_date} ({current_day}). Use this to interpret relative dates like "tomorrow" or "next week".
+{get_prompt_datetime_context()}
 
 Your responsibilities:
 1. Provide current weather conditions for any location
