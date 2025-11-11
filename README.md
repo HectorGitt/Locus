@@ -82,7 +82,7 @@ The main Locus agent acts as a router, delegating tasks to appropriate sub-agent
 
     ```env
     GEMINI_API_KEY=your_gemini_api_key_here
-    MODEL_TYPE_MAIN=gemini-2.0-flash-exp
+    MODEL_TYPE_MAIN=gemini-2.5-flash-native-audio-preview-09-2025
     MODEL_TYPE_SUB=gemini-2.5-flash
     GOOGLE_MAPS_API_KEY=your_maps_api_key_here
     GOOGLE_CLOUD_TRANSLATION_API_KEY=your_translation_api_key_here
@@ -340,7 +340,7 @@ Use the provided PowerShell deployment script:
 **What it does:**
 
 -   Configures Python environment for gcloud
--   Sets model types (main agent: `gemini-2.5-flash-native-audio-preview-09-2025`, sub-agents: `gemini-2.0-flash`)
+-   Sets model types (main agent: `gemini-2.5-flash-native-audio-preview-09-2025`, sub-agents: `gemini-2.5-flash`)
 -   Creates temporary deployment folder
 -   Generates Dockerfile automatically
 -   Builds and deploys to Cloud Run with UI
@@ -502,7 +502,7 @@ After successful deployment:
 The deployment automatically sets:
 
 -   `MODEL_TYPE_MAIN`: gemini-2.5-flash-native-audio-preview-09-2025
--   `MODEL_TYPE_SUB`: gemini-2.0-flash
+-   `MODEL_TYPE_SUB`: gemini-2.5-flash
 -   `GOOGLE_CLOUD_PROJECT`: Your GCP project ID
 -   `GOOGLE_CLOUD_LOCATION`: us-central1
 
