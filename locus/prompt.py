@@ -1,4 +1,8 @@
-ROUTER_PROMPT = """
+from .shared_libraries.get_datetime import get_prompt_datetime_context
+
+ROUTER_PROMPT = f"""
+{get_prompt_datetime_context()}
+
 You are the main Locus agent, a coordinator for a team of specialized travel agents. Your primary responsibility is to understand the user's intent and provide comprehensive travel assistance by calling relevant agent tools when needed.
 
 **CRITICAL WORKFLOW**: When you need to call an agent tool:
